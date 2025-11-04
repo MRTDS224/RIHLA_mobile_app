@@ -1,0 +1,29 @@
+rihla_env/
+__pycache__/
+Users.json
+.fake
+# Ignorer les fichiers de configuration spécifiques à l'IDE
+.vscode/
+.idea/
+
+# Ignorer les fichiers de logs
+*.log
+
+# Ignorer les fichiers de base de données SQLite (si utilisés pour les tests)
+*.sqlite3
+
+# Ignorer les fichiers de cache Python
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorer les fichiers de test coverage
+.coverage
+htmlcov/
+
+# Ignorer les fichiers générés par pip
+pip-log.txt
+
+# Ignorer les fichiers de configuration de l'environnement virtuel
+venv/
+.env

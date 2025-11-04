@@ -1,0 +1,1356 @@
+#:kivy 2.3.1
+#:import utils kivy.utils
+#:import Clock kivy.clock.Clock
+#:import Window kivy.core.window.Window
+
+<RootWidget>:
+    FloatLayout:
+        # orientation: 'vertical'
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'pictures/background/morocco.jpg'  # Fond d'écran
+
+        TitleBar:
+            id: title_bar
+            size_hint_y: 0.1
+            pos_hint: {'x': 0, 'top': 1}  # Position fixe en haut de l'écran
+
+        ScreenManager:
+            id: screen_manager
+            size_hint_y: 0.9
+            pos_hint: {'x': 0, 'top': 0.9}  # Position fixe sous la barre de titre
+            HomeScreen:
+                name: 'home'
+            SignupScreen:
+                name: 'signup'
+            PreferencesScreen:
+                name: 'preferences'
+            EmailInputScreen:
+                name: 'email_input'
+            CodeInputScreen:
+                name: 'code_input'
+            NewPasswordScreen:
+                name: 'new_password'
+            AccountScreen:
+                name: 'account'
+            AssistantScreen:
+                name: 'assistant'
+            TranslationScreen:
+                name: 'translation'
+            RecommendationScreen:
+                name: 'recommendation'
+            RecommendationDetailScreen:
+                name: 'recommendation_detail'
+            RecognitionScreen:
+                name: 'recognition'
+            RecognitionResultScreen:
+                name: 'recognition_result'
+        
+        # Barre de navigation fixe en bas de l'écran
+        NavigationBar:
+            id: navigation_bar
+            size_hint_y: 0.1
+            pos_hint: {'x': 0, 'y': 0}  # Position fixe en bas de l'écran
+
+# Barre d'en-tête sous forme de rule dynamique
+<TitleBar>:
+    size_hint_y: None
+    height: '50dp'  # Hauteur de la barre de navigation
+    orientation: 'horizontal'
+    padding: 20
+            
+    Label:
+        id: title
+        text: ""
+        font_size: 24
+        color: 0, 0, 0, 1  # Noir
+        halign: 'left'
+        valign: 'middle'
+        text_size: self.size
+        size_hint: 0.7, None
+        height: 50
+    
+    Spinner:
+        id: menu_spinner
+        text: "Menu"
+        values: ['Compte', 'Deconnexion']
+        size_hint_x: 0.6
+        size_hint_y: None
+        height: 50
+        background_normal: ''
+        background_color: 1, 0.95, 0.95, 1
+        color: 0, 0, 0, 1  # Noir
+        on_text: root.change_screen(self.text)
+
+# Barre de naviation sous forme de rule dynamique
+<NavigationBar@BoxLayout>:
+    current_screen: ''
+    size_hint_y: None
+    height: '50dp'
+    orientation: 'horizontal'
+    padding: 20
+
+    # Assistant
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 1
+        Button:
+            text: "Assistant"
+            font_size: 15
+            color: 0, 0, 0, 1
+            background_normal: ''
+            background_down: ""
+            background_color: 1, 0.95, 0.95, 1
+            on_release: app.root.ids.screen_manager.current = 'assistant'
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+        Widget:
+            size_hint_y: None
+            height: 3
+            canvas:
+                Color:
+                    rgba: (1, 0, 0, 1) if root.current_screen == 'assistant' else (0, 0, 0, 0)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+    # Traduction
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 1
+        Button:
+            text: "Traduction"
+            font_size: 16
+            color: 0, 0, 0, 1
+            background_normal: ''
+            background_down: ""
+            background_color: 1, 0.95, 0.95, 1
+            on_release: app.root.ids.screen_manager.current = 'translation'
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+        Widget:
+            size_hint_y: None
+            height: 3
+            canvas:
+                Color:
+                    rgba: (1, 0, 0, 1) if root.current_screen == 'translation' else (0, 0, 0, 0)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+    # Recommandation
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 1
+        Button:
+            text: "Recommandation"
+            font_size: 15
+            color: 0, 0, 0, 1
+            background_normal: ''
+            background_down: ""
+            background_color: 1, 0.95, 0.95, 1
+            on_release: app.root.ids.screen_manager.current = 'recommendation'
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+        Widget:
+            size_hint_y: None
+            height: 3
+            canvas:
+                Color:
+                    rgba: (1, 0, 0, 1) if root.current_screen == 'recommendation' else (0, 0, 0, 0)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+    # Reconnaissance
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 1
+        Button:
+            text: "Reconnaissance"
+            font_size: 15
+            color: 0, 0, 0, 1
+            background_normal: ''
+            background_down: ""
+            background_color: 1, 0.95, 0.95, 1
+            on_release: app.root.ids.screen_manager.current = 'recognition'
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+        Widget:
+            size_hint_y: None
+            height: 3
+            canvas:
+                Color:
+                    rgba: (1, 0, 0, 1) if root.current_screen == 'recognition' else (0, 0, 0, 0)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+#
+<ChatBubble>:
+    message_text: ""
+    bg_color: [1, 1, 1, 1]  # Valeur par défaut explicite
+    size_hint_y: None
+    size_hint_x: None
+    padding: [dp(15), dp(10)]
+    width: root.bubble_width  # Utilise la largeur passée par ChatMessage
+    height: max(dp(40), label_id.height + dp(20))
+    canvas.before:
+        Color:
+            rgba: root.bg_color if root.bg_color else [1, 1, 1, 1]  # Sécurité
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(15)]
+    Label:
+        id: label_id
+        text: root.message_text
+        color: 0, 0, 0, 1
+        size_hint_y: None
+        size_hint_x: 1
+        text_size: self.width - dp(10), None
+        height: self.texture_size[1]
+        halign: "left"
+        valign: "top"
+        markup: True
+
+<ChatMessage>:
+    is_sent: False
+    message_text: ""
+    bubble_width: Window.width * 0.7
+    size_hint_y: None
+    height: bubble_id.height + dp(10)
+    padding: [dp(5), dp(5)]
+
+    AnchorLayout:
+        size_hint_x: 1
+        size_hint_y: None
+        height: bubble_id.height
+        anchor_x: 'right' if root.is_sent else 'left'
+
+        ChatBubble:
+            id: bubble_id
+            message_text: root.message_text
+            bg_color: [0.2, 0.6, 1, 1] if root.is_sent else [0.8, 0.8, 0.8, 1]  # Couleurs explicites
+            bubble_width: root.bubble_width
+
+<ThinkingIndicator@BoxLayout>:
+    size_hint_y: None
+    height: dp(40)
+    padding: dp(10)
+    BoxLayout:
+        size_hint: None, None
+        size: dp(120), dp(20)
+        pos_hint: {'center_x': 0.5}
+        spacing: dp(5)
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex("#E5E5EA")
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(10)]
+        Label:
+            text: "Typing..."
+            color: 0.5, 0.5, 0.5, 1
+            size_hint_x: 0.6
+            halign: "right"
+        Dot:
+            size_hint: None, None
+            size: dp(8), dp(8)
+            pos_hint: {'center_y': 0.5}
+            canvas:
+                Color:
+                    rgba: 0.5, 0.5, 0.5, 1
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+        Dot:
+            size_hint: None, None
+            size: dp(8), dp(8)
+            pos_hint: {'center_y': 0.5}
+            canvas:
+                Color:
+                    rgba: 0.5, 0.5, 0.5, 0.7
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+        Dot:
+            size_hint: None, None
+            size: dp(8), dp(8)
+            pos_hint: {'center_y': 0.5}
+            canvas:
+                Color:
+                    rgba: 0.5, 0.5, 0.5, 0.4
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+
+<Dot@Widget>:
+    size_hint: None, None
+    size: dp(8), dp(8)
+    canvas:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
+        Ellipse:
+            pos: self.pos
+            size: self.size
+
+# Assistant virtuel
+<AssistantScreen>:
+    orientation: "vertical"
+    spacing: dp(5)
+    padding: dp(10)
+    pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+
+    # 1. ScrollView prend tout l'espace restant
+    ScrollView:
+        id: scroll_view
+        size_hint_y: None
+        height: Window.height - dp(115)
+        do_scroll_x: False
+        scroll_distance: dp(50)
+        bar_width: dp(5)
+        bar_color: utils.get_color_from_hex("#C1C1C1")
+        bar_inactive_color: utils.get_color_from_hex("#E0E0E0")
+        BoxLayout:
+            id: messages_box
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            padding: [dp(5), dp(5)]
+            spacing: dp(10)
+
+    # 2. Zone de saisie fixe en bas
+    BoxLayout:
+        size_hint_y: None
+        height: min(dp(60), message_input.height + dp(20)) 
+        spacing: dp(10)
+        padding: dp(5)
+        TextInput:
+            id: message_input
+            hint_text: "Tapez votre message ici..."
+            multiline: True
+            size_hint_x: 0.85
+            padding: [dp(10), dp(10), dp(10), dp(5)]
+            background_normal: ""
+            background_active: ""
+            background_color: utils.get_color_from_hex("#FFFFFF")
+            foreground_color: 0, 0, 0, 1
+            cursor_width: dp(2)
+            focus: True
+            on_text_validate:
+                root.send_message(message_input.text) if not root.thinking else None
+            on_text:
+                root.on_message_input(self, self.text)
+        Button:
+            id: send_btn
+            text: "Envoyer"
+            size_hint_x: 0.15
+            background_normal: ""
+            background_color: utils.get_color_from_hex("#25D366") if message_input.text.strip() else utils.get_color_from_hex("#FF3B30")
+            color: 1, 1, 1, 1
+            bold: True
+            on_release:
+                root.send_message(message_input.text) if not root.thinking else None
+
+# Ecran d'accueil
+<HomeScreen>:
+    f_email: email
+    f_password: password
+    FloatLayout:
+        padding: 20
+        spacing: 20
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: 50
+            pos_hint: {'top':0.9}
+            Label:
+                text: "Bienvenue dans l'application de traduction et de recommandations"
+                font_size: 24
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                color: 0, 0, 0, 1  # Noir
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+
+        GridLayout:
+            cols: 2
+            rows: 2
+            padding: 20
+            spacing: 20
+            size_hint_y: None
+            height: 170
+            pos_hint: {'center_x': 0.4, 'center_y': 0.7}
+
+            Label:
+                text: 'Email:'
+                font_size: 16
+                halign: 'right'
+                valign: 'middle'
+                color: 0, 0, 0, 1  # Noir
+                size_hint_x: 0.4
+                text_size: self.size
+
+            TextInput:
+                id: email
+                hint_text: "Entrez votre email"
+                multiline: False
+                size_hint_x: 0.6
+                on_text: root.on_text_fields()
+
+            Label:
+                text: 'Mot de passe:'
+                font_size: 16
+                halign: 'right'
+                valign: 'middle'
+                color: 0, 0, 0, 1  # Noir
+                size_hint_x: 0.4
+                text_size: self.size
+
+            TextInput:
+                id: password
+                hint_text: "Entrez votre mot de passe"
+                multiline: False
+                password: True  # Masque le texte pour les mots de passe
+                size_hint_x: 0.6
+                on_text: root.on_text_fields()
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: [20, 0, 20, 20]  # [left, top, right, bottom]
+            spacing: 20
+            pos_hint: {'y': 0.53}
+            Button:
+                text: "[u][color=0077cc]Créer un compte[/color][/u]"
+                markup: True
+                font_size: 18
+                color: 0, 0, 0, 1
+                background_normal: ''
+                background_color: 0, 0, 0, 0  # Transparent
+                size_hint_y: None
+                height: 50
+                on_press: app.root.ids.screen_manager.current = 'signup'
+            
+            Button:
+                text: "[u][color=0077cc]Réinitialiser le mot de passe[/color][/u]"
+                markup: True
+                font_size: 18
+                color: 0, 0, 0, 1
+                background_normal: ''
+                background_color: 0, 0, 0, 0  # Transparent
+                size_hint_y: None
+                height: 50
+                on_press: app.root.ids.screen_manager.current = 'email_input'
+            
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 20
+            size_hint_y: None
+            height: 100
+            pos_hint: {'y': 0.4}
+
+            Button:
+                text: "Se connecter"
+                on_press: root.login()
+                size_hint: 0.5, None
+                height: 50
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                font_size: 18
+                background_color: utils.get_color_from_hex("#25D366") if root.can_login else utils.get_color_from_hex("#FF3B30")
+                background_normal: ''
+                color: 1, 1, 1, 1  # Texte blanc
+            
+            Label:
+                id: message
+                text: ""
+                color: 1, 0, 0, 1  # Rouge
+                size_hint_y: None
+                height: 50
+
+# Ecran de création de compte
+<SignupScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+        pos_hint: {'y': 0.3}
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: 20 #[20, 50, 20, 100]  # [left, top, right, bottom]
+            spacing: 20
+
+            Label:
+                text: "Créer un compte"
+                font_size: 24
+                size_hint_y: None
+                color: 0, 0, 0, 1  # Noir
+                height: self.texture_size[1]
+
+            GridLayout:
+                cols: 2
+                spacing: 10
+                size_hint_y: None
+                height: 300
+                # padding: [30, 10, 30, 10]  # [left, top, right, bottom]
+                
+                Label:
+                    text: "Prénom"
+                    font_size: 16
+                    color: 0, 0, 0, 1  # Noir
+                    size_hint_x: 0.3
+                TextInput:
+                    id: first_name
+                    hint_text: "Entrez votre prénom"
+                    size_hint_x: 0.7
+
+                Label:
+                    text: "Nom:"
+                    color: 0, 0, 0, 1  # Noir
+                    font_size: 16
+                    size_hint_x: 0.3
+                TextInput:
+                    id: last_name
+                    hint_text: "Entrez votre nom"
+                    size_hint_x: 0.7
+
+                Label:
+                    text: "Email:"
+                    color: 0, 0, 0, 1  # Noir
+                    font_size: 16
+                    size_hint_x: 0.3
+                TextInput:
+                    id: email
+                    hint_text: "Entrez votre email"
+                    size_hint_x: 0.7
+
+                Label:
+                    text: "Mot de passe:"
+                    color: 0, 0, 0, 1  # Noir
+                    font_size: 16
+                    size_hint_x: 0.3
+                TextInput:
+                    id: password
+                    hint_text: "Entrez votre mot de passe"
+                    password: True  # Masque le texte pour les mots de passe
+                    size_hint_x: 0.7
+
+                Label:
+                    text: "Confirmer votre\nmot de passe:"
+                    color: 0, 0, 0, 1  # Noir
+                    font_size: 16
+                    size_hint_x: 0.3
+                TextInput:
+                    id: confirm_password
+                    hint_text: "Confirmez votre mot de passe"
+                    password: True  # Masque le texte pour les mots de passe
+                    size_hint_x: 0.7
+
+            Label:
+                id: message
+                text: ""
+                color: 1, 0, 0, 1  # Rouge
+                size_hint_y: None
+                height: self.texture_size[1]
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 20
+            padding: 20 #[20, 100, 20, 200]  # [left, top, right, bottom]
+            size_hint_y: None
+            height: 50
+            Button:
+                text: "Retour"
+                on_press: app.root.ids.screen_manager.current = 'home'
+                size_hint_y: None
+                height: 50
+                background_normal: ''
+                background_color: 1, 0, 0, 1  # Vert
+
+            Button:
+                text: "Suivant"
+                on_press: root.go_to_preferences_screen()
+                size_hint_y: None
+                height: 50
+                font_size: 18
+                background_normal: ''
+                background_color: 0, 1, 0, 1  # Rouge
+                color: 1, 1, 1, 1  # Texte blanc
+
+
+# Ecran de choix des goûts touristiques
+<PreferencesScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [30, 50, 20, 100] ## [left, top, right, bottom]
+        spacing: 10
+
+        Label:
+            id: title
+            text: "Choisissez vos goûts touristiques (max 3)"
+            font_size: 20
+            text_size: self.width, None
+            color: 0, 0, 0, 1  # Noir
+            size_hint_y: 0.2
+            height: self.texture_size[1]
+
+        ScrollView:
+            do_scroll_x: False # Pas de défilement horizontal
+            do_scroll_y: True # Défilement vertical activé
+            size_hint_y: 0.8
+
+            GridLayout:
+                id: preferences_grid
+                cols: 2
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: 10
+                padding: [30, 10, 30, 10]  # [left, top, right, bottom]
+
+                Button:
+                    text: "Culture"
+                    size_hint: None, None
+                    size: 200, 200
+                    background_normal: "pictures/culture.jpeg"
+                    background_down: "pictures/culture.jpeg"
+                    color: 1, 1, 1, 1
+                    on_press: root.toggle_preference("Culture")
+
+                Button:
+                    text: "Aventure"
+                    size_hint: None, None
+                    size: 200, 200
+                    background_normal: "pictures/adventure.jpeg"
+                    background_down: "pictures/adventure.jpeg"
+                    color: 1, 1, 1, 1
+                    on_press: root.toggle_preference("Aventure")
+
+                Button:
+                    text: "Gastronomie"
+                    size_hint: None, None
+                    size: 200, 200
+                    background_normal: "pictures/gastronomy.jpg"
+                    background_down: "pictures/gastronomy.jpg"
+                    color: 1, 1, 1, 1
+                    on_press: root.toggle_preference("Gastronomie")
+
+                Button:
+                    text: "Plage"
+                    size_hint: None, None
+                    size: 200, 200
+                    background_normal: "pictures/beach.jpeg"
+                    background_down: "pictures/beach.jpeg"
+                    color: 1, 1, 1, 1
+                    on_press: root.toggle_preference("Plage")
+
+                Button:
+                    text: "Art"
+                    size_hint: None, None
+                    size: 200, 200
+                    background_normal: "pictures/art.jpeg"
+                    background_down: "pictures/art.jpeg"
+                    color: 1, 1, 1, 1
+                    on_press: root.toggle_preference("Art")
+
+                Button:
+                    text: "Sport"
+                    size_hint: None, None
+                    size: 200, 200
+                    background_normal: "pictures/sports.jpg"
+                    background_down: "pictures/sports.jpg"
+                    color: 1, 1, 1, 1
+                    on_press: root.toggle_preference("Sport")
+        
+        Label:
+            id: message
+            text: ""
+            color: 1, 0, 0, 1  # Rouge
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Button:
+            text: "Créer un compte"
+            on_press: root.create_account()
+            size_hint_y: None
+            height: 50
+            background_color: 0, 1, 0, 1 # Vert
+            background_normal: ''
+            color: 1, 1, 1, 1  # Texte blanc
+        
+        Button:
+            text: "Retour"
+            on_press: app.root.ids.screen_manager.current = 'signup'
+            size_hint: 0.4, None
+            height: 50
+            background_color: 1, 0, 0, 1  # Rouge
+            background_normal: ''
+            color: 1, 1, 1, 1  # Texte blanc
+
+# Ecran de saisie de l'email pour la réinitialisation
+<EmailInputScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+        pos_hint: {"center_x": 0.5, "center_y": 1}
+
+        Label:
+            text: "Entrez votre email"
+            font_size: 24
+            color: 0, 0, 0, 1  # Noir
+            size_hint_y: None
+            height: 50
+
+        TextInput:
+            id: email_reset
+            hint_text: "Entrez votre email"
+            multiline: False
+            size_hint_y: None
+            height: 50
+
+        Button:
+            text: "Envoyer le code"
+            on_press: root.send_reset_code()
+            size_hint_y: None
+            height: 50
+            background_color: 0, 1, 0, 1  # Vert
+            background_normal: ''
+        
+        Button:
+            text: "Retour à la connexion"
+            on_press: app.root.ids.screen_manager.current = 'home'
+            size_hint: 0.4, None
+            height: 50
+            font_size: 18
+            background_color: 1, 0, 0, 1  # Rouge
+            background_normal: ''
+            color: 1, 1, 1, 1  # Texte blanc
+
+# Ecran de saisie du code de réinitialisation
+<CodeInputScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+        pos_hint: {'y': 0.5}
+
+        Label:
+            text: "Entrez le code reçu"
+            font_size: 24
+            color: 0, 0, 0, 1  # Noir
+            size_hint_y: None
+            height: 50
+
+        TextInput:
+            id: code_input
+            hint_text: "Entrez le code reçu"
+            multiline: False
+            size_hint_y: None
+            height: 50
+
+        Button:
+            text: "Vérifier le code"
+            on_press: root.verify_code()
+            size_hint_y: None
+            height: 50
+            background_color: 0, 1, 0, 1 # Vert
+            background_normal: ''
+        
+        Label:
+            id: countdown_label
+            text: "Temps restant : 3:00"
+            font_size: 18
+            color: 0, 1, 0, 1
+            size_hint_y: None
+            height: 40
+        
+        Button:
+            id: resend_button
+            text: "Renvoyer le code"
+            disabled: True # Désactivé jusqu'à expiration du décompte
+            on_press: root.resend_code()
+            size_hint_y: None
+            height: 50
+            background_color: 0, 0, 1, 1  # Bleu
+            background_normal: ''
+
+        Button:
+            text: "Retour"
+            on_press: app.root.ids.screen_manager.current = 'email_input'
+            size_hint: 0.4, None
+            height: 50
+            background_color: 1, 0, 0, 1  # Rouge
+            background_normal: ''
+
+# Ecran de saisie du nouveau mot de passe
+<NewPasswordScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+        pos_hint: {'y': 0.5}
+
+        Label:
+            text: "Définissez un nouveau mot de passe"
+            font_size: 24
+            color: 0, 0, 0, 1  # Noir
+            size_hint_y: None
+            height: 50
+
+        TextInput:
+            id: new_password
+            hint_text: "Entrez un nouveau mot de passe"
+            password: True
+            multiline: False
+            size_hint_y: None
+            height: 50
+        
+        TextInput:
+            id: confirm_new_password
+            hint_text: "Confirmez le nouveau mot de passe"
+            password: True
+            multiline: False
+            size_hint_y: None
+            height: 50
+
+        Button:
+            text: "Réinitialiser le mot de passe"
+            on_press: root.reset_password()
+            size_hint_y: None
+            height: 50
+            background_color: 0, 1, 0, 1  # Vert
+            background_normal: ''
+
+        Button:
+            text: "Retour à la connexion"
+            on_press: app.root.ids.screen_manager.current = 'code_input'
+            size_hint: 0.4, None
+            height: 50
+            font_size: 18
+            background_color: 1, 0, 0, 1  # Rouge
+            background_normal: ''
+            color: 1, 1, 1, 1  # Texte blanc
+
+        Label:
+            id: message
+            text: ""
+            color: 1, 0, 0, 1  # Rouge
+            size_hint_y: None
+            height: self.texture_size[1]
+
+# Account Screen
+<AccountScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+        pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+
+        Label:
+            text: "Mon Compte"
+            font_size: 24
+            color: 0, 0, 0, 1  # Noir
+            size_hint_y: None
+            height: 50
+
+        TextInput:
+            id: user_first_name
+            text:'Your First Name'
+            size_hint_y: None
+            height: 50
+            multiline: False
+            disabled: True
+            size_hint_x: 0.85
+            padding: [dp(10), dp(10), dp(10), dp(5)]
+            background_normal: ""
+            background_active: ""
+            focus: True
+        
+        TextInput:
+            id: user_last_name
+            text:'Your Last Name'
+            size_hint_y: None
+            height: 50
+            multiline: False
+            disabled: True
+            size_hint_x: 0.85
+            padding: [dp(10), dp(10), dp(10), dp(5)]
+            background_normal: ""
+            background_active: ""
+            focus: True
+
+        TextInput:
+            id: user_email
+            text: 'Your email'
+            size_hint_y: None
+            height: 50
+            multiline: False
+            disabled: True
+            size_hint_x: 0.85
+            padding: [dp(10), dp(10), dp(10), dp(5)]
+            background_normal: ""
+            background_active: ""
+            focus: True
+
+        TextInput:
+            id: user_preferences
+            text: 'Your preferences'
+            size_hint_y: None
+            height: 50
+            multiline: False
+            disabled: True
+            size_hint_x: 0.85
+            padding: [dp(10), dp(10), dp(10), dp(5)]
+            background_normal: ""
+            background_active: ""
+            focus: True
+        
+        Button:
+            text: "Modifier"
+            on_press: root.activate_modify_account(True)
+            size_hint_y: None
+            height: 50
+            background_color: 0, 0, 1, 1 # Vert
+            background_normal: ''
+        
+        Button:
+            id: save_button
+            text: "Enregistrer les modifications"
+            size_hint_y: None
+            height: 50
+            background_color: 0, 1, 0, 1
+            disabled: True
+            opacity: 0
+            on_press: root.modify_account()
+        
+        Button:
+            text: "Retour"
+            on_press: app.root.ids.screen_manager.current = 'translation'
+            size_hint_y: None
+            height: 50
+            background_normal: ''
+            background_color: 1, 0, 0, 1  # Rouge
+
+        Button:
+            text: "Déconnexion"
+            on_press: app.logout()
+            size_hint_y: None
+            height: 50
+            background_color: 1, 0, 0, 1 # Rouge
+            background_normal: ''
+        
+        Button:
+            text: "Supprimer le compte"
+            on_press: root.delete_account()
+            size_hint_y: None
+            height: 50
+            background_color: 1, 0, 0, 1 # Rouge
+            background_normal: ''
+
+# Ecran de traduction
+<TranslationScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 20
+        padding: 20
+        pos_hint: {"center_x": 0.5, "center_y": 0.75}
+
+        # GridLayout pour la sélection des langues
+        GridLayout:
+            cols: 2
+            rows: 2
+            spacing: 10
+            size_hint_y: None
+            height: 100
+
+            Label:
+                text: "Langue source :"
+                size_hint_x: 0.4
+                font_size: 20
+                color: 0, 0, 0, 1  # Noir
+                valign: 'middle'
+
+            Spinner:
+                id: source_language
+                text: "Détection automatique"
+                values: ['Darija', 'Français', 'Anglais', 'Espagnol', 'Allemand', 'Arabe', 'Chinois', 'Italien', 'Japonais']
+                size_hint_x: 0.6
+                size_hint_y: None
+                height: 50
+                background_normal: ''
+                background_color: 1, 1, 1, 1
+                color: 0, 0, 0, 1  # Noir
+
+            Label:
+                text: "Langue cible :"
+                size_hint_x: 0.4
+                font_size: 20
+                color: 0, 0, 0, 1  # Noir
+                valign: 'middle'
+
+            Spinner:
+                id: target_language
+                text: "Choisir..."
+                values: ['Darija', 'Français', 'Anglais', 'Espagnol', 'Allemand', 'Arabe', 'Chinois', 'Italien', 'Japonais']
+                size_hint_x: 0.6
+                size_hint_y: None
+                height: 50
+                background_normal: ''
+                background_color: 1, 1, 1, 1
+                color: 0, 0, 0, 1  # Noir
+                
+        # Zone d'entrée de texte avec bouton audio intégré
+        FloatLayout:
+            size_hint_y: None
+            height: 200
+
+            TextInput:
+                id: source_text
+                hint_text: "Entrez le texte à traduire"
+                multiline: True
+                size_hint: 1, 1
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                font_size: 20
+
+            Button:
+                size_hint: None, None
+                opacity: 0
+                size: 50, 50
+                background_normal: "pictures/microphone.jpeg"
+                background_down: "pictures/microphone.jpeg"
+                pos_hint: {"right": 1, "y": 0.1}  # Aligné à droite
+                on_press: root.record_audio()
+                disabled: not (root.ids.target_language.text != "Choisir...")
+
+        # Section pour le résultat de la traduction avec boutons d'interaction
+        FloatLayout:
+            size_hint_y: None
+            height: 200
+
+            TextInput:
+                id: translated_text
+                text: "Le résultat de la traduction apparaîtra ici"
+                font_name: "seguiemj"
+                color: 0, 0, 0, 1
+                font_size: 20
+                multiline: True
+                readonly: True
+                cursor_width: 0
+                size_hint: 1, 1
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            
+            Button:
+                size_hint: None, None
+                opacity: 0
+                size: 50, 50
+                background_normal: "pictures/audio.jpeg"
+                background_down: "pictures/audio.jpeg"
+                on_press: root.listen_translation()
+                pos_hint: {"right": 1, "y": 0.1}
+
+        # Bouton pour déclencher la traduction
+        Button:
+            text: "Traduire"
+            font_size: 18
+            size_hint_y: None
+            height: 50
+            background_color: 1, 0, 0, 1  # Rouge
+            background_normal: ''
+            color: 1, 1, 1, 1  # Texte blanc
+            disabled: not (root.ids.target_language.text != "Choisir...")
+            on_press: root.translate_text()
+        # Zone de message
+        Label:
+            id: message_label
+            text: ""
+            color: 1, 0, 0, 1  # Rouge
+            size_hint_y: None
+            height: self.texture_size[1]
+
+# Ecran de recommandations
+<RecommendationScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 20
+        padding: [20, 0, 20, 0]  # [left, top, right, bottom]
+        pos_hint: {"y": 0.12}
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 20
+            size_hint_y: None
+            height: 75
+            TextInput:
+                id: preferences_input
+                hint_text: "Entrez vos préférences (ex: Culture,Aventure)"
+            Button:
+                text: "Rechercher"
+                on_press: root.research_recommendations()
+                size_hint_x: 0.4
+                background_color: 0, 1, 0, 1  # Vert
+                background_normal: ''
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 20
+            size_hint_y: None
+            height: 640
+            ScrollView:
+                id: recommendations_scroll
+                do_scroll_x: False # Pas de défilement horizontal
+                do_scroll_y: True # Défilement vertical activé
+                scroll_distance: dp(50)
+                bar_width: dp(5)
+                bar_color: utils.get_color_from_hex("#C1C1C1")
+                bar_inactive_color: utils.get_color_from_hex("#E0E0E0")
+
+# Ecran d'affichage d'une recommandation donnée
+<RecommendationDetailScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 50
+        pos_hint: {"center_x": 0.5, "center_y": 0.6}
+
+        Image:
+            id: recommendation_detail_image
+            size_hint: None, None
+            size: 300, 200
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Label:
+            id: recommendation_detail_label
+            text: ""
+            font_name: "seguiemj"
+            markup: True
+            bold: True
+            font_size: 32
+            halign: 'center'
+            valign: 'middle'
+            color: 0, 0, 0, 1  # Noir
+            text_size: self.width, None
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 50
+            spacing: 50
+            Label:
+                id: recommendation_detail_location
+                text: ""
+                font_name: "seguiemj"
+                color: 1, 1, 1, 1  # Blanc
+                font_size: 24
+                halign: 'left'
+                valign: 'middle'
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1]
+                
+            Button:
+                text: "🎵 Jouer l'audio"
+                font_name: "seguiemj"
+                size_hint: 0.6, None
+                height: 50
+                halign: 'right'
+                on_press: root.play_audio(root.audio_path)  # Remplacez par le chemin de votre fichier audio
+                background_normal: ''
+                background_color: 0, 1, 0, 1  # Bleu
+
+
+        Label:
+            id: recommendation_detail_description
+            text: ""
+            font_name: "seguiemj"
+            color: 1, 1, 1, 1  # Blanc
+            font_size: 20
+            halign: 'left'
+            valign: 'top'
+            text_size: self.width, None
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Label:
+            id: recommendation_detail_info
+            text: ""
+            font_name: "seguiemj"
+            font_size: 20
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.width, None
+            color: 1, 1, 1, 1  # Blanc
+            size_hint_y: None
+            height: self.texture_size[1]
+        
+        # Barre de Music en bas
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 60 if root.music_bar_visible else 0
+            opacity: 1 if root.music_bar_visible else 0
+            spacing: 10
+            canvas.before:
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1  # Couleur de fond de la barre
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Button:
+                text: "⏸ Pause"
+                font_name: "seguiemj"
+                on_press: root.pause_audio()
+                background_normal: ''
+                background_color: 1, 0.5, 0, 1  # Orange
+                size_hint_y: None
+                height: 40
+                pos_hint: {'center_y': 0.5}  # Centré verticalement
+
+            Button:
+                text: "▶ Reprendre"
+                font_name: "seguiemj"
+                on_press: root.resume_audio()
+                background_normal: ''
+                background_color: 0, 1, 0, 1  # Vert
+                size_hint_y: None
+                height: 40
+                pos_hint: {'center_y': 0.5}  # Centré verticalement
+
+            Button:
+                text: "⏹ Arrêter"
+                font_name: "seguiemj"
+                on_press: root.stop_audio()         
+                background_normal: ''
+                background_color: 1, 0, 0, 1  # Rouge   
+                size_hint_y: None
+                height: 40    
+                pos_hint: {'center_y': 0.5}  # Centré verticalement
+
+        Button:
+            text: "Retour"
+            size_hint: 0.5, None
+            height: 50
+            background_normal: ''
+            background_color: 1, 0, 0, 1  # Rouge
+            on_press: app.root.ids.screen_manager.current = 'recommendation'
+
+# Ecran de reconnaissance
+<RecognitionScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+        pos_hint: {"center_x": 0.5, "center_y": 0.6}
+
+        Label:
+            text: "Sélectionnez une image"
+            font_size: dp(24)
+            bold: True
+            color: 0, 0, 0, 1
+            size_hint_y: None
+            height: dp(50)
+        
+        Image:
+            id: camera_preview
+            source: ""
+            size_hint_y: None
+            height: dp(300)
+            pos_hint: {"center_x": 0.5}
+            canvas.before:
+                Color:
+                    rgba: 0.1, 0.1, 0.1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        Button:
+            text: "📸 Prendre une photo"
+            size_hint_y: None
+            height: 50
+            on_release: root.capture_image()
+            background_color: 1, 0, 0, 1  # Rouge
+            background_normal: ''
+
+        Button:
+            text: "Annuler et Prendre une autre photo"
+            size_hint_y: None
+            height: 50
+            on_release: root.reload_camera()  # Permet de fermer/revenir si besoin
+            background_color: 0, 1, 0, 1
+            background_normal: ""
+
+        Button:
+            text: "Charger une image"
+            size_hint_y: None
+            height: 50
+            on_press: root.open_file_chooser()
+            background_color: 1, 0, 0, 1
+            background_normal: ''
+            pos_hint: {"center_x": 0.5}
+        
+        Button:
+            text: "🔍 Reconnaître l'image"
+            size_hint: 0.6, None
+            height: 50
+            on_press: root.recognize_image()
+            disabled: not root.ids.camera_preview.source
+            background_color: 0, 0, 1, 1  # Bleu
+            background_normal: ''
+            pos_hint: {"center_x": 0.5}
+
+# Ecran du résultat de la reconnaissance
+<RecognitionResultScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [20, 20, 20, 50]
+        spacing: 20
+        pos_hint: {"center_x": 0.5, "center_y": 0.8}
+
+        Label:
+            text: "Résultat de la reconnaissance"
+            font_size: 24
+            bold: True
+            size_hint_y: None
+            height: 50
+            color: 0, 0, 0, 1  # Noir
+        
+        Image:
+            id: captured_image
+            source: ""
+            size_hint: None, None
+            size: 300, 200
+            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Label:
+            id: result_label_text
+            text: ""
+            color: 0, 0, 0, 1  # Noir
+            text_size: self.width, None
+            size_hint_y: None
+            height: self.texture_size[1]
+        
+        Button:
+            text: "Retour"
+            size_hint: 0.5, None
+            height: 50
+            background_normal: ''
+            background_color: 1, 0, 0, 1  # Rouge
+            on_press: app.root.ids.screen_manager.current = 'recognition'
+# Options de Spinner
+<SpinnerOption>:
+    background_color: 1, 1, 1, 1
+    background_normal: ''  # Pas d'image de fond
+    color: 0, 0, 0, 1                    # Couleur du texte (ici noir)
+    font_size: 24                        # (optionnel) Taille du texte
+    opacity: 1  # Opacité de l'option
