@@ -5,7 +5,7 @@ class Translator:
     translator = GTranslator()
     
     # 🔑 Paste your Gemini API key
-    genai.configure(api_key="AIzaSyAYL9dqN8GubHE7JMAjNKDTHUt_J6zjizk")  # Replace with your real key
+    genai.configure(api_key="")  # Replace with your real key
 
     # List available models
     # models = genai.list_models()
